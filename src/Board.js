@@ -133,54 +133,51 @@
     // --------------------------------------------------------------
     //
     // test if a specific major diagonal on this board contains a conflict
-    hasMajorDiagonalConflictAt: function(majorDiagonalColumnIndexAtFirstRowWidth) {
+    hasMajorDiagonalConflictAt: function (startingMajorDiagnoalColumnIndex) {
       var matrix = this.rows();
-      // var matrixWidth = matrix[0].length;
-      var nIndex = matrix[0].length - 1;
+      var nIndex = this.get('n') - 1;
       var count = 0;
-      var startRowIndex;
-
-      //which
-      var dColIndex = majorDiagonalColumnIndexAtFirstRowWidth;
-      var stopPt = nVal - 1;
-      for (let i = 0; i < stopPt; i++) {
-        if (dcolIndex < nVal - 1) {
-          count += matrix[i][dColIndex];
-          dColIndex++;
+      //Which row to start
+      if (startingMajorDiagnoalColumnIndex >= 0) {
+        var rowIndex = 0;
+        var colIndex = startingMajorDiagnoalColumnIndex;
+        for (let i = 0; colIndex <= nIndex; i++) {
+          count += matrix[i][colIndex];
+          colIndex++;
+        }
+      } else {
+        var rowIndex = - (startingMajorDiagnoalColumnIndex);
+        var colIndex = 0;
+        for (let i = rowIndex; i <= nIndex; i++) {
+          count += matrix[rowIndex][colIndex];
+          colIndex++;
+          rowIndex++;
         }
       }
+
       if (count > 1) {
         return true;
       }
-
-
-      // var start = majorDiagonalColumnIndexAtFirstRowWidth;
-      // for (var i = start; i < matrix.length; i++) {
-      //   for (var j = 0; j < matrix.length; j++) {
-
-      //   }
-      // }
-
-
-
-
-      //if at end
-      // if (majorDiagonalColumnIndexAtFirstRow === matrixWidth || majorDiagonalColumnIndexAtFirstRow === -matrixWidth) {
-      //   return false;
-      // }
-
-
-
       return false;
     },
 
     // test if any major diagonals on this board contain conflicts
+    //let computer know where conflict occers
     hasAnyMajorDiagonalConflicts: function() {
+      var matrix = this.rows();
+      var nLength = this.get('n');
+      for (let r = 0; r < nLength; r++ ) {
+        for ( let c = 0; c < nLength; c++) {
+          if (matrix[r][c] === 1) {
+            var t = c - r;
+            return this.hasMajorDiagonalConflictAt(t);
+          }
+        }
+      }
+
 
       return false;
     },
-
-
 
     // Minor Diagonals - go from top-right to bottom-left
     // --------------------------------------------------------------
